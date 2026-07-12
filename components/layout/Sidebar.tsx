@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -10,8 +10,6 @@ const navItems = [
     href: "/environmental",
     children: [
       { label: "Emission Factors", href: "/environmental/emission-factors" },
-      { label: "Product ESG Profiles", href: "/environmental/product-profiles" },
-      { label: "Carbon Transactions", href: "/environmental/carbon-transactions" },
       { label: "Environmental Goals", href: "/environmental/goals" },
     ],
   },
@@ -20,8 +18,8 @@ const navItems = [
     href: "/social",
     children: [
       { label: "CSR Activities", href: "/social/csr-activities" },
-      { label: "Employee Participation", href: "/social/participation" },
       { label: "Diversity Dashboard", href: "/social/diversity" },
+      { label: "Participation", href: "/social/participation" },
     ],
   },
   {
@@ -39,37 +37,21 @@ const navItems = [
     href: "/gamification",
     children: [
       { label: "Challenges", href: "/gamification/challenges" },
-      { label: "Challenge Participation", href: "/gamification/participation" },
+      { label: "Participation Approvals", href: "/gamification/participation" },
       { label: "Badges", href: "/gamification/badges" },
       { label: "Rewards", href: "/gamification/rewards" },
       { label: "Leaderboard", href: "/gamification/leaderboard" },
-    ],
-  },
-  {
-    label: "Reports",
-    href: "/reports",
-    children: [
-      { label: "Environmental Report", href: "/reports/environmental" },
-      { label: "Social Report", href: "/reports/social" },
-      { label: "Governance Report", href: "/reports/governance" },
-      { label: "ESG Summary", href: "/reports/esg-summary" },
-      { label: "Custom Report Builder", href: "/reports/custom" },
-    ],
-  },
-  {
-    label: "Settings",
-    href: "/settings",
-    children: [
-      { label: "Departments", href: "/settings/departments" },
-      { label: "Categories", href: "/settings/categories" },
-      { label: "ESG Configuration", href: "/settings/esg-configuration" },
-      { label: "Notification Settings", href: "/settings/notifications" },
     ],
   },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
+
+  // Hide sidebar on auth pages
+  if (pathname === '/login' || pathname === '/signup') {
+    return null;
+  }
 
   return (
     <aside className="w-64 h-screen bg-slate-900 text-slate-100 flex flex-col overflow-y-auto">

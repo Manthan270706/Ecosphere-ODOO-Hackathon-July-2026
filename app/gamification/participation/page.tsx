@@ -41,14 +41,19 @@ export default function ParticipationPage() {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-white">Employee Participation Approval Queue</h1>
+    <div className="max-w-7xl mx-auto space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-800">Participation Approval Queue</h1>
+          <p className="text-slate-500 text-sm mt-1">
+            Review proofs and award XP to employees.
+          </p>
+        </div>
       </div>
 
-      <div className="bg-[#1e1e1e] border border-gray-800 rounded-xl overflow-hidden">
-        <table className="w-full text-left text-sm text-gray-300">
-          <thead className="bg-[#2a2a2a] text-gray-400">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <table className="w-full text-left text-sm text-slate-600">
+          <thead className="bg-slate-50 border-b border-slate-100 text-slate-500">
             <tr>
               <th className="px-6 py-4 font-medium">Employee</th>
               <th className="px-6 py-4 font-medium">Activity/Challenge</th>
@@ -58,24 +63,24 @@ export default function ParticipationPage() {
               <th className="px-6 py-4 font-medium text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-800">
+          <tbody className="divide-y divide-slate-50">
             {participations.map((part) => (
-              <tr key={part.id} className="hover:bg-[#252525] transition-colors">
-                <td className="px-6 py-4 font-medium text-white">{part.employee?.name || '-'}</td>
+              <tr key={part.id} className="hover:bg-slate-50 transition-colors">
+                <td className="px-6 py-4 font-medium text-slate-800">{part.employee?.name || '-'}</td>
                 <td className="px-6 py-4">{part.challenge?.title || '-'}</td>
                 <td className="px-6 py-4">
                   {part.proofUrl ? (
-                    <a href={part.proofUrl} target="_blank" className="text-orange-400 hover:underline">View Proof</a>
+                    <a href={part.proofUrl} target="_blank" className="text-orange-600 hover:underline font-medium">View Proof</a>
                   ) : (
-                    <span className="text-gray-500">No proof</span>
+                    <span className="text-slate-400">—</span>
                   )}
                 </td>
-                <td className="px-6 py-4">{part.challenge?.xp || 0}</td>
+                <td className="px-6 py-4 font-semibold text-slate-700">{part.challenge?.xp || 0}</td>
                 <td className="px-6 py-4">
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${
-                    part.approvalStatus === 'approved' ? 'bg-green-500/10 text-green-400' : 
-                    part.approvalStatus === 'rejected' ? 'bg-red-500/10 text-red-400' :
-                    'bg-yellow-500/10 text-yellow-400'
+                  <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+                    part.approvalStatus === 'approved' ? 'bg-green-50 text-green-700' : 
+                    part.approvalStatus === 'rejected' ? 'bg-red-50 text-red-700' :
+                    'bg-amber-50 text-amber-700'
                   }`}>
                     {part.approvalStatus.toUpperCase()}
                   </span>
@@ -83,10 +88,10 @@ export default function ParticipationPage() {
                 <td className="px-6 py-4 text-right space-x-2">
                   {part.approvalStatus === 'pending' && (
                     <>
-                      <button onClick={() => handleApprove(part.id)} className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded transition-colors">
+                      <button onClick={() => handleApprove(part.id)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
                         Approve
                       </button>
-                      <button onClick={() => handleReject(part.id)} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition-colors">
+                      <button onClick={() => handleReject(part.id)} className="bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 px-3 py-1.5 rounded-lg transition-colors font-medium">
                         Reject
                       </button>
                     </>
@@ -96,8 +101,8 @@ export default function ParticipationPage() {
             ))}
             {participations.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
-                  No participations found.
+                <td colSpan={6} className="px-6 py-12 text-center text-slate-500">
+                  No pending participations right now.
                 </td>
               </tr>
             )}

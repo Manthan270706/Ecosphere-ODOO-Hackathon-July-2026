@@ -22,40 +22,46 @@ export default function LeaderboardPage() {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-          🏆 EcoSphere Leaderboard
-        </h1>
+    <div className="max-w-7xl mx-auto space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
+            🏆 EcoSphere Leaderboard
+          </h1>
+          <p className="text-slate-500 text-sm mt-1">
+            Top employees driving sustainability across the organization.
+          </p>
+        </div>
       </div>
 
-      <div className="bg-[#1e1e1e] border border-gray-800 rounded-xl overflow-hidden shadow-2xl">
-        <table className="w-full text-left text-sm text-gray-300">
-          <thead className="bg-orange-500/10 text-orange-400 border-b border-gray-800">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <table className="w-full text-left text-sm text-slate-600">
+          <thead className="bg-slate-50 border-b border-slate-100 text-slate-500">
             <tr>
-              <th className="px-6 py-4 font-bold w-20">Rank</th>
-              <th className="px-6 py-4 font-bold">Employee</th>
-              <th className="px-6 py-4 font-bold">Department</th>
-              <th className="px-6 py-4 font-bold text-right">Total XP</th>
+              <th className="px-6 py-4 font-medium w-20">Rank</th>
+              <th className="px-6 py-4 font-medium">Employee</th>
+              <th className="px-6 py-4 font-medium">Department</th>
+              <th className="px-6 py-4 font-medium text-right">Total XP</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-800">
+          <tbody className="divide-y divide-slate-50">
             {entries.map((entry, index) => (
-              <tr key={entry.id} className="hover:bg-[#252525] transition-colors">
-                <td className="px-6 py-4 font-bold">
-                  {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
+              <tr key={entry.id} className="hover:bg-slate-50 transition-colors">
+                <td className="px-6 py-4 font-bold text-lg">
+                  {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : <span className="text-slate-400 text-sm">#{index + 1}</span>}
                 </td>
-                <td className="px-6 py-4 font-bold text-white text-base">{entry.name}</td>
+                <td className="px-6 py-4 font-semibold text-slate-800">{entry.name}</td>
                 <td className="px-6 py-4">{entry.department?.name || '-'}</td>
-                <td className="px-6 py-4 text-right font-bold text-orange-400 text-base">
+                <td className="px-6 py-4 text-right font-bold text-orange-600 text-base">
                   {entry.xpPoints.toLocaleString()}
                 </td>
               </tr>
             ))}
             {entries.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
-                  The leaderboard is currently empty.
+                <td colSpan={4} className="px-6 py-16 text-center text-slate-500">
+                  <p className="text-3xl mb-2">📊</p>
+                  <p className="font-semibold text-slate-700">The leaderboard is currently empty.</p>
                 </td>
               </tr>
             )}

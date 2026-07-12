@@ -1,65 +1,116 @@
-import Image from "next/image";
+import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans p-8">
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-12">
+          <h1 className="text-4xl font-extrabold mb-3 text-slate-900 flex items-center gap-3">
+            🌍 EcoSphere
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-slate-500 text-lg">
+            ESG Management Platform — Unified Dashboard
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+          {/* Environmental Module (Green) */}
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 hover:shadow-md hover:border-emerald-200 transition-all">
+            <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-2xl mb-4">
+              🍃
+            </div>
+            <h2 className="text-xl font-bold text-slate-800 mb-2">Environmental</h2>
+            <p className="text-slate-500 text-sm mb-6 h-10">
+              Track carbon footprints and manage emission goals.
+            </p>
+            <div className="space-y-2 text-sm font-medium">
+              <Link href="/environmental/goals" className="block text-emerald-600 hover:underline">
+                → Sustainability Goals
+              </Link>
+              <Link href="/environmental/emission-factors" className="block text-emerald-600 hover:underline">
+                → Emission Factors
+              </Link>
+            </div>
+          </div>
+
+          {/* Social Module (Blue) */}
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 hover:shadow-md hover:border-blue-200 transition-all">
+            <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-2xl mb-4">
+              👥
+            </div>
+            <h2 className="text-xl font-bold text-slate-800 mb-2">Social</h2>
+            <p className="text-slate-500 text-sm mb-6 h-10">
+              Manage CSR activities and diversity metrics.
+            </p>
+            <div className="space-y-2 text-sm font-medium">
+              <Link href="/social" className="block text-blue-600 hover:underline">
+                → Social Dashboard
+              </Link>
+              <Link href="/social/csr-activities" className="block text-blue-600 hover:underline">
+                → CSR Activities
+              </Link>
+              <Link href="/social/diversity" className="block text-blue-600 hover:underline">
+                → Diversity Dashboard
+              </Link>
+            </div>
+          </div>
+
+          {/* Governance Module (Purple) */}
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 hover:shadow-md hover:border-purple-200 transition-all">
+            <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-2xl mb-4">
+              ⚖️
+            </div>
+            <h2 className="text-xl font-bold text-slate-800 mb-2">Governance</h2>
+            <p className="text-slate-500 text-sm mb-6 h-10">
+              Enforce policies, run audits, and track compliance.
+            </p>
+            <div className="space-y-2 text-sm font-medium">
+              <Link href="/governance/policies" className="block text-purple-600 hover:underline">
+                → ESG Policies
+              </Link>
+              <Link href="/governance/audits" className="block text-purple-600 hover:underline">
+                → Audits
+              </Link>
+              <Link href="/governance/compliance-issues" className="block text-purple-600 hover:underline">
+                → Compliance Issues
+              </Link>
+              <Link href="/governance/acknowledgements" className="block text-purple-600 hover:underline">
+                → Acknowledgements
+              </Link>
+            </div>
+          </div>
+
+          {/* Gamification Module (Orange) */}
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 hover:shadow-md hover:border-orange-200 transition-all">
+            <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center text-2xl mb-4">
+              🎮
+            </div>
+            <h2 className="text-xl font-bold text-slate-800 mb-2">Gamification</h2>
+            <p className="text-slate-500 text-sm mb-6 h-10">
+              Engage employees with challenges and rewards.
+            </p>
+            <div className="space-y-2 text-sm font-medium">
+              <Link href="/gamification/challenges" className="block text-orange-600 hover:underline">
+                → Challenges
+              </Link>
+              <Link href="/gamification/leaderboard" className="block text-orange-600 hover:underline">
+                → Leaderboard
+              </Link>
+              <Link href="/gamification/rewards" className="block text-orange-600 hover:underline">
+                → Rewards
+              </Link>
+              <Link href="/gamification/badges" className="block text-orange-600 hover:underline">
+                → Badges
+              </Link>
+              <Link href="/gamification/participation" className="block text-orange-600 hover:underline">
+                → Approvals
+              </Link>
+            </div>
+          </div>
+
         </div>
-      </main>
+      </div>
     </div>
   );
 }

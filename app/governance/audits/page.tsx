@@ -39,20 +39,25 @@ export default function AuditsPage() {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-white">Audits</h1>
+    <div className="max-w-7xl mx-auto space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-800">Audits</h1>
+          <p className="text-slate-500 text-sm mt-1">
+            Track departmental audits and findings.
+          </p>
+        </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          className="inline-flex items-center gap-2 bg-purple-600 text-white font-medium text-sm px-5 py-2.5 rounded-xl hover:bg-purple-700 transition-colors shadow-sm"
         >
-          + New Audit
+          <span>+</span> New Audit
         </button>
       </div>
 
-      <div className="bg-[#1e1e1e] border border-gray-800 rounded-xl overflow-hidden">
-        <table className="w-full text-left text-sm text-gray-300">
-          <thead className="bg-[#2a2a2a] text-gray-400">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <table className="w-full text-left text-sm text-slate-600">
+          <thead className="bg-slate-50 border-b border-slate-100 text-slate-500">
             <tr>
               <th className="px-6 py-4 font-medium">Title</th>
               <th className="px-6 py-4 font-medium">Department</th>
@@ -61,15 +66,15 @@ export default function AuditsPage() {
               <th className="px-6 py-4 font-medium">Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-800">
+          <tbody className="divide-y divide-slate-50">
             {audits.map((audit) => (
-              <tr key={audit.id} className="hover:bg-[#252525] transition-colors">
-                <td className="px-6 py-4 font-medium text-white">{audit.title}</td>
+              <tr key={audit.id} className="hover:bg-slate-50 transition-colors">
+                <td className="px-6 py-4 font-medium text-slate-800">{audit.title}</td>
                 <td className="px-6 py-4">{audit.department?.name || '-'}</td>
                 <td className="px-6 py-4">{audit.auditor?.name || '-'}</td>
                 <td className="px-6 py-4">{audit.auditDate ? new Date(audit.auditDate).toLocaleDateString() : '-'}</td>
                 <td className="px-6 py-4">
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${audit.status === 'completed' ? 'bg-green-500/10 text-green-400' : 'bg-blue-500/10 text-blue-400'}`}>
+                  <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${audit.status === 'completed' ? 'bg-green-50 text-green-700' : 'bg-blue-50 text-blue-700'}`}>
                     {audit.status}
                   </span>
                 </td>
@@ -77,7 +82,7 @@ export default function AuditsPage() {
             ))}
             {audits.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
                   No audits found.
                 </td>
               </tr>
@@ -87,54 +92,56 @@ export default function AuditsPage() {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
-          <div className="bg-[#1e1e1e] border border-gray-800 rounded-xl w-full max-w-md overflow-hidden">
-            <div className="p-6 border-b border-gray-800">
-              <h2 className="text-xl font-bold text-white">Create New Audit</h2>
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+              <h2 className="text-lg font-bold text-slate-800">Create New Audit</h2>
+              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600 text-xl leading-none">
+                ×
+              </button>
             </div>
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">Title</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Title</label>
                 <input
                   required
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full bg-[#2a2a2a] border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-purple-500"
+                  className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
                 />
               </div>
-              {/* Need real inputs for department/auditor in production, text for hackathon speed */}
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">Department ID</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Department ID</label>
                 <input
                   required
                   type="text"
                   value={formData.departmentId}
                   onChange={(e) => setFormData({ ...formData, departmentId: e.target.value })}
-                  className="w-full bg-[#2a2a2a] border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-purple-500"
+                  className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">Auditor (Employee ID)</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Auditor (Employee ID)</label>
                 <input
                   required
                   type="text"
                   value={formData.auditorId}
                   onChange={(e) => setFormData({ ...formData, auditorId: e.target.value })}
-                  className="w-full bg-[#2a2a2a] border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-purple-500"
+                  className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
                 />
               </div>
-              <div className="flex gap-3 pt-4">
+              <div className="flex justify-end gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 bg-transparent border border-gray-700 hover:bg-gray-800 text-white py-2 rounded-lg transition-colors"
+                  className="px-5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg font-medium transition-colors"
+                  className="px-5 py-2.5 rounded-xl text-sm font-medium bg-purple-600 text-white hover:bg-purple-700 transition-colors shadow-sm"
                 >
                   Create Audit
                 </button>

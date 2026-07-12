@@ -4,10 +4,10 @@ import { prisma } from '@/lib/prisma';
 // Valid transitions can be enforced here or in frontend. For hackathon speed, we allow any valid enum value update.
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
     const { title, categoryId, description, xp, difficulty, evidenceRequired, deadline, status } = body;
 
@@ -37,10 +37,10 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     await prisma.challenge.delete({
       where: { id },
     });

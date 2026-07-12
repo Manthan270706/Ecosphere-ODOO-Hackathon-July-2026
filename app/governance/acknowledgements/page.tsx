@@ -22,31 +22,36 @@ export default function PolicyAcknowledgementsPage() {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-white">Policy Acknowledgements</h1>
+    <div className="max-w-7xl mx-auto space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-800">Policy Acknowledgements</h1>
+          <p className="text-slate-500 text-sm mt-1">
+            Track employee sign-offs on ESG policies.
+          </p>
+        </div>
       </div>
 
-      <div className="bg-[#1e1e1e] border border-gray-800 rounded-xl overflow-hidden">
-        <table className="w-full text-left text-sm text-gray-300">
-          <thead className="bg-[#2a2a2a] text-gray-400">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <table className="w-full text-left text-sm text-slate-600">
+          <thead className="bg-slate-50 border-b border-slate-100 text-slate-500">
             <tr>
               <th className="px-6 py-4 font-medium">Employee</th>
               <th className="px-6 py-4 font-medium">Policy</th>
               <th className="px-6 py-4 font-medium">Acknowledged At</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-800">
+          <tbody className="divide-y divide-slate-50">
             {acks.map((ack) => (
-              <tr key={ack.id} className="hover:bg-[#252525] transition-colors">
-                <td className="px-6 py-4 font-medium text-white">{ack.employee?.name || '-'}</td>
+              <tr key={ack.id} className="hover:bg-slate-50 transition-colors">
+                <td className="px-6 py-4 font-medium text-slate-800">{ack.employee?.name || '-'}</td>
                 <td className="px-6 py-4">{ack.policy?.title || '-'}</td>
-                <td className="px-6 py-4 text-purple-400">{new Date(ack.acknowledgedAt).toLocaleString()}</td>
+                <td className="px-6 py-4 text-purple-600 font-medium">{new Date(ack.acknowledgedAt).toLocaleString()}</td>
               </tr>
             ))}
             {acks.length === 0 && (
               <tr>
-                <td colSpan={3} className="px-6 py-8 text-center text-gray-500">
+                <td colSpan={3} className="px-6 py-8 text-center text-slate-500">
                   No acknowledgements recorded yet.
                 </td>
               </tr>

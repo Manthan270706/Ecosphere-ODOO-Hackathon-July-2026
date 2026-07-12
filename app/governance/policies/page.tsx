@@ -37,37 +37,42 @@ export default function PoliciesPage() {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-white">ESG Policies</h1>
+    <div className="max-w-7xl mx-auto space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-800">ESG Policies</h1>
+          <p className="text-slate-500 text-sm mt-1">
+            Manage corporate policies and versions across the organization.
+          </p>
+        </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          className="inline-flex items-center gap-2 bg-purple-600 text-white font-medium text-sm px-5 py-2.5 rounded-xl hover:bg-purple-700 transition-colors shadow-sm"
         >
-          + New Policy
+          <span>+</span> New Policy
         </button>
       </div>
 
-      <div className="bg-[#1e1e1e] border border-gray-800 rounded-xl overflow-hidden">
-        <table className="w-full text-left text-sm text-gray-300">
-          <thead className="bg-[#2a2a2a] text-gray-400">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <table className="w-full text-left text-sm text-slate-600">
+          <thead className="bg-slate-50 border-b border-slate-100 text-slate-500">
             <tr>
               <th className="px-6 py-4 font-medium">Title</th>
               <th className="px-6 py-4 font-medium">Version</th>
               <th className="px-6 py-4 font-medium">Published At</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-800">
+          <tbody className="divide-y divide-slate-50">
             {policies.map((policy) => (
-              <tr key={policy.id} className="hover:bg-[#252525] transition-colors">
-                <td className="px-6 py-4 font-medium text-white">{policy.title}</td>
+              <tr key={policy.id} className="hover:bg-slate-50 transition-colors">
+                <td className="px-6 py-4 font-medium text-slate-800">{policy.title}</td>
                 <td className="px-6 py-4">{policy.version || '-'}</td>
                 <td className="px-6 py-4">{new Date(policy.publishedAt).toLocaleDateString()}</td>
               </tr>
             ))}
             {policies.length === 0 && (
               <tr>
-                <td colSpan={3} className="px-6 py-8 text-center text-gray-500">
+                <td colSpan={3} className="px-6 py-8 text-center text-slate-500">
                   No policies found. Create one to get started.
                 </td>
               </tr>
@@ -77,54 +82,57 @@ export default function PoliciesPage() {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
-          <div className="bg-[#1e1e1e] border border-gray-800 rounded-xl w-full max-w-md overflow-hidden">
-            <div className="p-6 border-b border-gray-800">
-              <h2 className="text-xl font-bold text-white">Create New Policy</h2>
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+              <h2 className="text-lg font-bold text-slate-800">Create New Policy</h2>
+              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600 text-xl leading-none">
+                ×
+              </button>
             </div>
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">Title</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Title</label>
                 <input
                   required
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full bg-[#2a2a2a] border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-purple-500"
+                  className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
                   placeholder="e.g., Anti-Corruption Policy"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">Version</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Version</label>
                 <input
                   type="text"
                   value={formData.version}
                   onChange={(e) => setFormData({ ...formData, version: e.target.value })}
-                  className="w-full bg-[#2a2a2a] border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-purple-500"
+                  className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
                   placeholder="e.g., 1.0"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">Content</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Content</label>
                 <textarea
                   rows={4}
                   value={formData.content}
                   onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  className="w-full bg-[#2a2a2a] border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-purple-500 resize-none"
+                  className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white resize-none"
                   placeholder="Policy content..."
                 />
               </div>
-              <div className="flex gap-3 pt-4">
+              <div className="flex justify-end gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 bg-transparent border border-gray-700 hover:bg-gray-800 text-white py-2 rounded-lg transition-colors"
+                  className="px-5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg font-medium transition-colors"
+                  className="px-5 py-2.5 rounded-xl text-sm font-medium bg-purple-600 text-white hover:bg-purple-700 transition-colors shadow-sm"
                 >
                   Publish Policy
                 </button>

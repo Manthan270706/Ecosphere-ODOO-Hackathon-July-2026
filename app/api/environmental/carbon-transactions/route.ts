@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 export async function GET() {
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Emission factor not found' }, { status: 404 });
   }
 
-  let config = await prisma.esgConfiguration.findFirst();
+  let config = await prisma.eSGConfiguration.findFirst();
   const autoCalc = config?.autoEmissionCalc ?? true;
 
   const co2Calculated = autoCalc

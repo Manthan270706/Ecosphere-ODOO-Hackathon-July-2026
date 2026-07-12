@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const data = await req.json();
 
-  const existing = await prisma.environmentalGoal.findUnique({ where: { id: params.id } });
+  const existing = await prisma.environmentalGoal.findUnique({ where: { id: (await params).id } });
   if (!existing) {
     return NextResponse.json({ error: 'Goal not found' }, { status: 404 });
   }
@@ -23,14 +23,14 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   }
 
   const goal = await prisma.environmentalGoal.update({
-    where: { id: params.id },
+    where: { id: (await params).id },
     data: { ...data, status },
   });
 
   return NextResponse.json(goal);
 }
 
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
-  await prisma.environmentalGoal.delete({ where: { id: params.id } });
+export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  await prisma.environmentalGoal.delete({ where: { id: (await params).id } });
   return NextResponse.json({ success: true });
 }

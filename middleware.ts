@@ -1,38 +1,52 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { verifyToken } from '@/lib/auth';
-
-const roleProtectedRoutes: Record<string, string[]> = {
-  '/settings': ['admin'],
-};
+import { NextRequest, NextResponse } from "next/server";
+import { verifyToken } from "@/lib/auth";
 
 export async function middleware(req: NextRequest) {
-  const publicPaths = ['/login', '/signup', '/api/auth/login', '/api/auth/signup'];
-  const path = req.nextUrl.pathname;
+  const token = req.cookies.get("token")?.value;
+  const pathname = req.nextUrl.pathname;
 
-  if (publicPaths.some((p) => path.startsWith(p))) {
-    return NextResponse.next();
-  }
+  const protectedPaths = [
+    "/dashboard",
+    "/environmental",
+    "/social",
+    "/governance",
+    "/gamification",
+    "/reports",
+    "/settings",
+  ];
 
-  const token = req.cookies.get('token')?.value;
-  if (!token) {
-    return NextResponse.redirect(new URL('/login', req.url));
-  }
-
-  try {
-    const decoded = await verifyToken(token);
-
-    for (const [route, roles] of Object.entries(roleProtectedRoutes)) {
-      if (path.startsWith(route) && !roles.includes(decoded.role)) {
-        return NextResponse.redirect(new URL('/dashboard', req.url));
-      }
+  if (protectedPaths.some((path) => pathname.startsWith(path))) {
+    if (!token) {
+      return NextResponse.redirect(new URL("/login", req.url));
     }
 
-    return NextResponse.next();
-  } catch {
-    return NextResponse.redirect(new URL('/login', req.url));
+    try {
+      const user = await verifyToken(token);
+
+      const adminOnlyPaths = ["/settings"];
+      if (adminOnlyPaths.some((path) => pathname.startsWith(path))) {
+        if (!["admin", "department_head"].includes(user.role)) {
+          return NextResponse.redirect(new URL("/dashboard", req.url));
+        }
+      }
+
+      return NextResponse.next();
+    } catch {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
   }
+
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/settings/:path*', '/environmental/:path*', '/social/:path*', '/governance/:path*', '/gamification/:path*', '/reports/:path*'],
-}
+  matcher: [
+    "/dashboard/:path*",
+    "/environmental/:path*",
+    "/social/:path*",
+    "/governance/:path*",
+    "/gamification/:path*",
+    "/reports/:path*",
+    "/settings/:path*",
+  ],
+};

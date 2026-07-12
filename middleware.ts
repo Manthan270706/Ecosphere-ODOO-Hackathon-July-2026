@@ -1,9 +1,8 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/auth';
 
 const roleProtectedRoutes: Record<string, string[]> = {
   '/settings': ['admin'],
-  '/governance/audits': ['admin', 'esg_manager', 'compliance_officer'],
 };
 
 export async function middleware(req: NextRequest) {

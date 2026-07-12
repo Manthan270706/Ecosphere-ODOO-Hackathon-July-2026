@@ -1,52 +1,57 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { verifyToken } from '@/lib/auth';
 
-export async function GET() {
+const MANAGER_ROLES = ['admin', 'esg_manager', 'department_head'];
+
+export async function GET(req: NextRequest) {
   try {
+    const token = req.cookies.get('token')?.value;
+    if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    await verifyToken(token);
+
     const challenges = await prisma.challenge.findMany({
-      include: {
-        category: true,
-      },
+      include: { category: true },
       orderBy: { deadline: 'asc' },
     });
     return NextResponse.json(challenges);
-  } catch (error) {
-    console.error('Error fetching challenges:', error);
-    return NextResponse.json({ error: 'Failed to fetch challenges' }, { status: 500 });
+  } catch {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const body = await request.json();
+    const token = req.cookies.get('token')?.value;
+    if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const user = await verifyToken(token);
+
+    if (!MANAGER_ROLES.includes(user.role)) {
+      return NextResponse.json({ error: 'Forbidden: only managers can create challenges' }, { status: 403 });
+    }
+
+    const body = await req.json();
     const { title, categoryId, description, xp, difficulty, evidenceRequired, deadline, status } = body;
 
-    if (!title || !categoryId || xp === undefined || !difficulty) {
-      return NextResponse.json(
-        { error: 'Title, categoryId, xp, and difficulty are required' },
-        { status: 400 }
-      );
+    if (!title || xp === undefined || !difficulty) {
+      return NextResponse.json({ error: 'Title, xp, and difficulty are required' }, { status: 400 });
     }
 
     const challenge = await prisma.challenge.create({
       data: {
         title,
-        categoryId,
+        categoryId: categoryId || null,
         description,
         xp,
         difficulty,
         evidenceRequired: evidenceRequired ?? false,
         deadline: deadline ? new Date(deadline) : undefined,
-        status: status || 'draft',
+        status: status || 'active',
       },
-      include: {
-        category: true,
-      },
+      include: { category: true },
     });
-
     return NextResponse.json(challenge, { status: 201 });
-  } catch (error) {
-    console.error('Error creating challenge:', error);
-    return NextResponse.json({ error: 'Failed to create challenge' }, { status: 500 });
+  } catch {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 }

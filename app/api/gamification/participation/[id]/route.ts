@@ -1,16 +1,27 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { verifyToken } from '@/lib/auth';
+
+const APPROVER_ROLES = ['admin', 'esg_manager', 'department_head'];
 
 export async function PUT(
-  request: Request,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const token = req.cookies.get('token')?.value;
+    if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const user = await verifyToken(token);
+
     const { id } = await params;
-    const body = await request.json();
+    const body = await req.json();
     const { approvalStatus, progress, proofUrl } = body;
 
-    // Fetch existing participation to check rules
+    // Only managers can approve/reject
+    if (approvalStatus && !APPROVER_ROLES.includes(user.role)) {
+      return NextResponse.json({ error: 'Forbidden: only managers can approve participations' }, { status: 403 });
+    }
+
     const existing = await prisma.challengeParticipation.findUnique({
       where: { id },
       include: { challenge: true, employee: true },
@@ -20,7 +31,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
 
-    // Business Rule: Cannot approve if evidence is required and no proof is provided
+    // Business Rule: Cannot approve if evidence required but no proof
     if (
       approvalStatus === 'approved' &&
       existing.challenge.evidenceRequired &&
@@ -33,12 +44,10 @@ export async function PUT(
       );
     }
 
-    // Execute within a transaction if we are approving
     let updatedParticipation;
 
     if (approvalStatus === 'approved' && existing.approvalStatus !== 'approved') {
       updatedParticipation = await prisma.$transaction(async (tx) => {
-        // 1. Update Participation
         const part = await tx.challengeParticipation.update({
           where: { id },
           data: {
@@ -49,15 +58,11 @@ export async function PUT(
           },
         });
 
-        // 2. Award XP to Employee
         const emp = await tx.employee.update({
           where: { id: existing.employeeId },
-          data: {
-            xpPoints: { increment: existing.challenge.xp },
-          },
+          data: { xpPoints: { increment: existing.challenge.xp } },
         });
 
-        // 3. Auto-award Badges
         const badges = await tx.badge.findMany();
         const completedCount = await tx.challengeParticipation.count({
           where: { employeeId: emp.id, approvalStatus: 'approved' },
@@ -70,7 +75,6 @@ export async function PUT(
           } else if (badge.unlockRuleType === 'challenge_count' && completedCount >= badge.unlockRuleValue) {
             shouldAward = true;
           }
-
           if (shouldAward) {
             const hasBadge = await tx.employeeBadge.findFirst({
               where: { employeeId: emp.id, badgeId: badge.id },
@@ -86,20 +90,14 @@ export async function PUT(
         return part;
       });
     } else {
-      // Just a normal update
       updatedParticipation = await prisma.challengeParticipation.update({
         where: { id },
-        data: {
-          approvalStatus,
-          progress,
-          proofUrl,
-        },
+        data: { approvalStatus, progress, proofUrl },
       });
     }
 
     return NextResponse.json(updatedParticipation);
-  } catch (error) {
-    console.error('Error updating participation:', error);
+  } catch {
     return NextResponse.json({ error: 'Failed to update participation' }, { status: 500 });
   }
 }
